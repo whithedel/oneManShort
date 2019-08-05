@@ -1,3 +1,44 @@
-.list-group-item {
-  line-height: 2.5;
+body {
+  font-family: 'Lato';
+  background: rgb(172, 169, 169); 
+  transition: 1s ease-in-out;
+  width: 100%;
+  height : 100%;
+  margin : 0 0;
+  padding: 0  0;
+}
+
+#header { 
+  color: black;
+}
+
+.square {
+  float: left;
+  width: 80px;
+  height: 80px;
+}
+
+.checker-table {
+  position: relative;
+  width: 640px;
+  height: 640px;
+  margin: 0 auto;
+}
+
+.square {
+  float: left;
+  width: 80px;
+  height: 80px;
+}
+  
+.grey_square {
+  background-color:rgb(105, 100, 100);
+}
+
+.black_square {
+  background-color :black;
+}
+
+.clear_float{
+  clear: both;
 }
