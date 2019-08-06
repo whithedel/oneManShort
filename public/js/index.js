@@ -111,17 +111,19 @@ const Board = function (rows) {
   return array;
 }
 
-
+var user1 = "Jack";
+var user2 = "Jill";
 
 var x = `X`
 // Creating an object with every board piece
-var boardPiece = function (color, col, row, hasPiece) {
+var boardPiece = function (color, row, col, hasPiece, user) {
 
   return {
     color: color,
-    col: col,
     row: row,
+    col: col,
     hasPiece: hasPiece,
+    user: user,
     possibleMoves: function () {
       var moves = [];
       // ************************* White Piece Logic **************************
@@ -241,19 +243,19 @@ function gamePieceSetup(array) {
       for (var j = 0; j < row.length; j++) {
 
         if (row[j] === `O${[]}`) {
-          row[j] = boardPiece(`White`, (j), (i), true);
+          row[j] = boardPiece(`White`,(i), (j),  true, user1);
         }
       }
     } else if (i > 4) {
       for (var k = 0; k < row.length; k++) {
         if (row[k] === `O`) {
-          row[k] = boardPiece(`Black`, (k), (i), true);
+          row[k] = boardPiece(`Black`,(i), (k),  true, user2);
         }
       }
     } else {
       for (var b = 0; b < row.length; b++) {
         if (row[b] === `O`) {
-          row[b] = boardPiece(`Square`, (b), (i), false);
+          row[b] = boardPiece(`Square`,(i), (b),  false);
         }
       }
     }
@@ -266,6 +268,7 @@ var gameBoard = fill(Board(8));
 var whites = 0;
 var blacks = 0;
 var squares = 0;
+
 
 // Count how mant white pieces on the board
 let whitesCounter = function () {
