@@ -2,7 +2,12 @@
 var $exampleText = $("#example-text");
 var $exampleDescription = $("#example-description");
 var $submitBtn = $("#submit");
+var $registerBtn = $("#register")
 var $exampleList = $("#example-list");
+var $email = $("#email");
+var $username = $("#staticUserName");
+var $password = $("#inputPassword1");
+var $passwordMatch = $("#inputPassword2");
 
 // The API object contains methods for each kind of request we'll make
 var API = {
@@ -13,7 +18,7 @@ var API = {
       },
       type: "POST",
       url: "api/examples",
-      data: JSON.stringify(example)
+      data: JSON.stringify(example),
     });
   },
   getExamples: function() {
@@ -30,10 +35,44 @@ var API = {
   }
 };
 
+// the userReq object for each kind of request we'll make.
+var userReq = {
+  saveUser: function (user) {
+    return $.ajax({
+      type: "POST",
+      url: "/register",
+      data: user
+    })
+  },
+};
+
+// handleFormRegister is call whenever we submit a new user then saves if in the database.
+var handleFormRegister = function(){
+  event.preventDefault();
+  console.log("in the handleformregister");
+  var user = {
+    email: $email.val().trim(),
+    password: $password.val().trim(),
+    passwordMatch : $passwordMatch.val().trim()
+  };
+
+  // if (!(user.email && user.password)) {
+  //   alert("You must enter an email and password!");
+  //   return;
+  // };
+
+  userReq.saveUser(user).then(function(){
+    //window.location.replace("http://localhost:3000/");
+  })
+}
+
 // refreshExamples gets new examples from the db and repopulates the list
 var refreshExamples = function() {
   API.getExamples().then(function(data) {
+    console.log(data)
+    console.log(`123456678788`)
     var $examples = data.map(function(example) {
+      console.log(example)
       var $a = $("<a>")
         .text(example.text)
         .attr("href", "/example/" + example.id);
@@ -50,7 +89,7 @@ var refreshExamples = function() {
         .text("ｘ");
 
       $li.append($button);
-
+        console.log(JSON.stringify($li))
       return $li;
     });
 
@@ -94,6 +133,20 @@ var handleDeleteBtnClick = function() {
   });
 };
 
+// takes in the email form the email input then splits it to take 
+//the first index and sets it as the value attr to the username section
+var emailInputChange = function(){
+  console.log("IM in here")
+  var username = $email.val().trim().split(`@`)[0]
+  $username.attr(`value`,username)
+}
+
 // Add event listeners to the submit and delete buttons
 $submitBtn.on("click", handleFormSubmit);
 $exampleList.on("click", ".delete", handleDeleteBtnClick);
+
+// Add event listener to the email input on the registration form. 
+$email.change(emailInputChange);
+// Add event listener to the register button.
+$registerBtn.on("click", handleFormRegister);
+
