@@ -182,7 +182,6 @@ var boardReq = {
 
 
 
-
 // Code to make length and width of board with arrays
 const Board = function (rows) {
     var array = [];
@@ -482,9 +481,6 @@ $(document).on("click", ".tile", (event) => {
 
     var moves = gamePiece.possibleMoves();
     console.log(moves)
-
-
-
 
 })
 

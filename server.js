@@ -10,10 +10,6 @@ var passport = require("passport");
 var db = require("./models");
 var app = express();
 var PORT = process.env.PORT || 3000;
-// var options = {
-//   username: "root",
-//   password: "maillot9Bootcamp",
-//   database: "oneManShortDB",
 //   host: "localhost",
 //   dialect: "mysql"
 // };

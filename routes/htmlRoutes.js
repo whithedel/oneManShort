@@ -42,6 +42,7 @@ module.exports = function (app) {
     console.log(`i got called 404`);
     res.render("404");
   });
+
 };
 
 
