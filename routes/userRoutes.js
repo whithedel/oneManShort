@@ -11,10 +11,8 @@ var exphbs = require("express-handlebars");
 handlebars = require('handlebars');
 var express = require("express");
 var app = express();
-
-app.engine('.hbs', exphbs({extname: '.hbs'}));
+app.engine('.hbs', exphbs({ extname: '.hbs' }));
 app.set('view engine', '.hbs');
-
 module.exports = function (app) {
     // Adding new user to the database.
     //   app.post("/register", function(req, res) {
@@ -23,7 +21,6 @@ module.exports = function (app) {
     //       res.json(dbUser);
     //     });
     //   });
-
     app.post("/register", [
         // email must be an email
         check("email", "Email field cannot be empty").not().isEmpty(),
@@ -41,13 +38,13 @@ module.exports = function (app) {
         // Finds the validation errors in this request and wraps them in an object with handy functions
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
-           
-             return res.json(errors)
-        
+
+            return res.json(errors)
+
         } else {
             var bcryptPassword = req.body.password
-            bcrypt.hash(bcryptPassword, saltRounds, function(err, hash) {
-                if (err){
+            bcrypt.hash(bcryptPassword, saltRounds, function (err, hash) {
+                if (err) {
                     console.log(err)
                     throw err;
                 }
@@ -55,62 +52,55 @@ module.exports = function (app) {
                 db.User.create({ email: req.body.email, password: hash }).then(function (dbUser) {
                     res.json(dbUser);
                 });
-              });
-              
+            });
+
         }
 
-        
     });
-
-    app.post("/loginAfterSignUp", function(req, res) {
-        db.User.findOne({ where : {email: req.body.email} }, { fields: [ 'id'] }).then(function(dbUserFindOne) {
-            var userId = { id:dbUserFindOne.dataValues.id}
-            req.login(userId,function(error) {
-                if (error){
+    app.post("/loginAfterSignUp", function (req, res) {
+        db.User.findOne({ where: { email: req.body.email } }, { fields: ['id'] }).then(function (dbUserFindOne) {
+            var userId = { id: dbUserFindOne.dataValues.id }
+            req.login(userId, function (error) {
+                if (error) {
                     console.log(`err obj : ${error}`)
                     throw error
-                } else{
+                } else {
                     console.log(req.user.id)
                     res.end()
                 }
-                
+
             })
         })
     })
-
-//     app.post('/login', 
-//   passport.authenticate('local', { failureRedirect: '/login' }),
-//   function(req, res) {
-//     res.redirect('/');
-//   });
-
+    //     app.post('/login', 
+    //   passport.authenticate('local', { failureRedirect: '/login' }),
+    //   function(req, res) {
+    //     res.redirect('/');
+    //   });
 };
-
-passport.serializeUser(function(userId, done) {
+passport.serializeUser(function (userId, done) {
     console.log(`serializeUser`)
     done(null, userId);
-  });
-   
-passport.deserializeUser(function(userId, done) {
+});
+
+passport.deserializeUser(function (userId, done) {
     console.log("passport deserializeuser")
-    db.User.findOne({where:userId}).then(function(user) {
-        var userId = { id:user.get().id}
+    db.User.findOne({ where: userId }).then(function (user) {
+        var userId = { id: user.get().id }
         console.log(userId)
         console.log("passport.deserializeUser")
         done(null, userId);
     });
-  });
-
-
-  function passStrategy(userEmail, unHashPassword){
+});
+function passStrategy(userEmail, unHashPassword) {
     passport.use(new LocalStrategy(
-        function(userEmail, unHashPassword, done) {
-          User.findOne({ username: userEmail }, function (err, user) {
-            if (err) { return done(err); }
-            if (!user) { return done(null, false); }
-            if (!user.verifyPassword(unHashPassword)) { return done(null, false); }
-            return done(null, user);
-          });
+        function (userEmail, unHashPassword, done) {
+            User.findOne({ username: userEmail }, function (err, user) {
+                if (err) { return done(err); }
+                if (!user) { return done(null, false); }
+                if (!user.verifyPassword(unHashPassword)) { return done(null, false); }
+                return done(null, user);
+            });
         }
-      ));
-  }
+    ));
+}
