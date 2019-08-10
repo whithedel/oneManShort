@@ -434,21 +434,39 @@ var handleStartGame = function () {
         console.log(data)
         // console.log(data[0].id)
         // console.log(typeof data)
-        var colArray= [];
-        i = 0; 
-        while (i < data.length) {
-            
-            if ((data[i].id % 8 === 0 || data[i].id === 1) && (data.id !== 64)){
-                var rowArray = []
-                 console.log(rowArray) 
+       
+            var board = []
+            for (var i = 0; i < 64; i += 8) {
+                board.push(data.slice(i, i + 8))
             }
-            if (rowArray.length < 8 ){
-                rowArray.push(data[i])
-                
+            console.log(board)
+        for (var i = 0; i < board.length; i++) {
+            var row = $("<tr>");
+
+            for (var j = 0; j < board.length; j++) {
+
+                $(row).append(`<td id='${i}${j}' class='tile ${board[i][j].color} text-center mx-3'data-row='${i}' data-col='${j}'>${board[i][j].user}</td>`);
+                // Ajax here
+                var boardDB = {
+                    color: board[i][j].color,
+                    positionX: j,
+                    positionY: i,
+                    user: board[i][j].user,
+                    isKing: board[i][j].isKing,
+                    hasPiece: board[i][j].hasPiece
+                }
+
+                // boardReq.saveBoard(gameBoardDB).then(function (data) {
+                //     console.log(data);
+                // })
+
+
             }
-            
-           i++ 
+
+             $("tbody").append(row)
+
         }
+
         // for (var i = 0; i < data.length; i++) {
        
         //     console.log(data[i].id)
