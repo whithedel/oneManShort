@@ -31,8 +31,15 @@
     <button type="button" class="btn btn-primary btn-sm" id="register">Register</button>
     </form>
 
-    <h1 class="text-center mt-2 error">
-
+    <h1 class="text-center">
+        {{#if error}}
+            {{#each error}}
+                <div class="alert alert-danger" role="alert">
+                       <h1>{{msg}}</h1> 
+                </div>
+            {{/each}}
+        {{/if}}
+       
     </h1>
 
 </div>

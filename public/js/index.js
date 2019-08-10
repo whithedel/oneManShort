@@ -43,13 +43,12 @@ var userReq = {
       url: "/register",
       data: user
     })
-  },
+  }
 };
 
 // handleFormRegister is call whenever we submit a new user then saves if in the database.
 var handleFormRegister = function(){
   event.preventDefault();
-  console.log("in the handleformregister");
   var user = {
     email: $email.val().trim(),
     password: $password.val().trim(),
@@ -61,9 +60,32 @@ var handleFormRegister = function(){
   //   return;
   // };
 
-  userReq.saveUser(user).then(function(){
-    //window.location.replace("http://localhost:3000/");
+  userReq.saveUser(user).then(function(data){
+    if (data !== "undefined" && "errors" in data){
+      obj = data;
+      $(".error").empty()
+      for (var data in obj){
+        obj[data].forEach(function(result){
+          var errMsg = result.msg
+          var htmlText = `<div class="alert alert-danger" role="alert">
+                            <h1>${errMsg}</h1> 
+                          </div>`;
+          $(".error").append(htmlText);
+        })
+      }
+    } else {
+      $.ajax({
+        url: "/loginAfterSignUp",
+        type: "POST",
+        data: data
+      }).then(function(data){
+        
+        window.location.href="http://localhost:3000/";
+      })
+    }
   })
+
+  
 }
 
 // refreshExamples gets new examples from the db and repopulates the list
@@ -136,7 +158,6 @@ var handleDeleteBtnClick = function() {
 // takes in the email form the email input then splits it to take 
 //the first index and sets it as the value attr to the username section
 var emailInputChange = function(){
-  console.log("IM in here")
   var username = $email.val().trim().split(`@`)[0]
   $username.attr(`value`,username)
 }

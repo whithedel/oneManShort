@@ -1,3 +1,6 @@
+// Authentication package
+var passport = require("passport");
+
 var db = require("../models");
 
 module.exports = function(app) {
@@ -27,6 +30,7 @@ module.exports = function(app) {
  // Render registration from.
   app.get("/register", function(req, res) {
     console.log(`i got called`);
+    
     res.render("register", {
       title: "Registration"
     });
@@ -34,6 +38,8 @@ module.exports = function(app) {
 
   // Render home page.
   app.get("/", function(req, res){
+    console.log(req.user);
+    console.log(req.isAuthenticated());
     res.render("home")
   })
 

@@ -1,9 +1,19 @@
 var db = require("../models");
-
+var hb = require('express-handlebars').create();
 var { check, validationResult } = require("express-validator");
 // requiring bcrypt so password would be hash before getting into the database
 var bcrypt = require('bcrypt');
 var saltRounds = 10;
+// Authentication package
+var passport = require("passport");
+// Requiring handlebars
+var exphbs = require("express-handlebars");
+handlebars = require('handlebars');
+var express = require("express");
+var app = express();
+
+app.engine('.hbs', exphbs({extname: '.hbs'}));
+app.set('view engine', '.hbs');
 
 module.exports = function (app) {
     // Adding new user to the database.
@@ -28,20 +38,19 @@ module.exports = function (app) {
             } else return true;
         })
     ], function (req, res) {
-        console.log(req.body);
         // Finds the validation errors in this request and wraps them in an object with handy functions
         var errors = validationResult(req);
         if (!errors.isEmpty()) {
-            console.log(errors.mapped())
-        //    err(errors, res)
-        //    res.render("register", {
-        //         title: "Registrationsss",
-        //         error: errors.mapped()
-        //     });
-            return res.status(422).json({ errors: errors.array() });
+           
+             return res.json(errors)
+        
         } else {
             var bcryptPassword = req.body.password
             bcrypt.hash(bcryptPassword, saltRounds, function(err, hash) {
+                if (err){
+                    console.log(err)
+                    throw err;
+                }
                 // Store hash in your password DB.
                 db.User.create({ email: req.body.email, password: hash }).then(function (dbUser) {
                     res.json(dbUser);
@@ -52,11 +61,56 @@ module.exports = function (app) {
 
         
     });
+
+    app.post("/loginAfterSignUp", function(req, res) {
+        db.User.findOne({ where : {email: req.body.email} }, { fields: [ 'id'] }).then(function(dbUserFindOne) {
+            var userId = { id:dbUserFindOne.dataValues.id}
+            req.login(userId,function(error) {
+                if (error){
+                    console.log(`err obj : ${error}`)
+                    throw error
+                } else{
+                    console.log(req.user.id)
+                    res.end()
+                }
+                
+            })
+        })
+    })
+
+//     app.post('/login', 
+//   passport.authenticate('local', { failureRedirect: '/login' }),
+//   function(req, res) {
+//     res.redirect('/');
+//   });
+
 };
 
-function err (errors, res){
-    res.render("register", {
-        title: "Registrationsss",
-        error: errors.mapped()
+passport.serializeUser(function(userId, done) {
+    console.log(`serializeUser`)
+    done(null, userId);
+  });
+   
+passport.deserializeUser(function(userId, done) {
+    console.log("passport deserializeuser")
+    db.User.findOne({where:userId}).then(function(user) {
+        var userId = { id:user.get().id}
+        console.log(userId)
+        console.log("passport.deserializeUser")
+        done(null, userId);
     });
-}
+  });
+
+
+  function passStrategy(userEmail, unHashPassword){
+    passport.use(new LocalStrategy(
+        function(userEmail, unHashPassword, done) {
+          User.findOne({ username: userEmail }, function (err, user) {
+            if (err) { return done(err); }
+            if (!user) { return done(null, false); }
+            if (!user.verifyPassword(unHashPassword)) { return done(null, false); }
+            return done(null, user);
+          });
+        }
+      ));
+  }
