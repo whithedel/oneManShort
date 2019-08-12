@@ -1,17 +1,59 @@
 <main role="main">
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-        <div class="container">
+    <div>
+        <div class="container mt-4">
             <h1 class="display-3">Hello, world!</h1>
             <p>This is a template for a simple marketing or informational website. It includes a large callout called a
                 jumbotron and three supporting pieces of content. Use it as a starting point to create something more
                 unique.</p>
-            <p><a class="btn btn-primary btn-lg" href="/register" role="button">Sign Up &raquo;</a></p>
+            <div class="row">
+                {{!-- signUp Button --}}
+                {{#unless user}}
+                <div class="col-6">
+                    <p><a class="btn btn-primary btn-lg" href="/register" role="button">Sign Up &raquo;</a></p>
+                </div>
+                {{/unless}}
+                {{!-- singin form --}}
+                {{#unless user}}
+                <div class="col-6 card" id="signinCard">
+                    <div class="card-header bg-white text-center">
+                        Sign-in
+                    </div>
+                    <form action="POST" class="form-signin">
+                        <label for="email" class="sr-only">Email address</label>
+                        <input type="email" name="email" id="email" class="form-control mb-1" placeholder="Email address"
+                            required autofocus>
+                        <label for="password" class="sr-only">Password</label>
+                        <input type="password" name="password" id="inputPassword1" class="form-control"
+                            placeholder="Password" required>
+                        <div class="checkbox mb-3">
+                            <label>
+                                <input type="checkbox" value="remember-me"> Remember me
+                            </label>
+                        </div>
+                        <button class="btn btn-lg btn-primary btn-block mb-3" id="signin" type="button">Submit</button>
+
+                    </form>
+                </div>
+                {{/unless}}
+            </div>
+
         </div>
     </div>
 </main>
+
+
+<div class="row">
+    <div class="col-12 text-center">
+        {{#if alertMessage}}
+        <div class="alert alert-danger" role="alert">
+            {{alertMessage}}
+        </div>
+        {{/if}}
+    </div>
+</div>
 <footer class="container fixed-bottom">
-    <p>&copy; oneManShort 2019</p>
+    <p class="mt-5 mb-3 text-muted text-center">&copy; oneManShort Checkers</p>
 </footer>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -20,3 +62,5 @@
 <script src="/docs/4.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o"
     crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="/js/index.js"></script>

@@ -35,7 +35,14 @@ module.exports = function (app) {
   app.get("/", function (req, res) {
     console.log(req.user);
     console.log(req.isAuthenticated());
-    res.render("home")
+    if(req.isAuthenticated()){
+      res.render("home", {
+        user : true
+      })
+    } else {
+      res.render("home")
+    }
+    
   })
   // Render 404 page for any unmatched routes
   app.get("*", function (req, res) {

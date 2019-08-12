@@ -1,18 +1,13 @@
 var db = require("../models");
-var hb = require('express-handlebars').create();
 var { check, validationResult } = require("express-validator");
 // requiring bcrypt so password would be hash before getting into the database
 var bcrypt = require('bcrypt');
 var saltRounds = 10;
 // Authentication package
 var passport = require("passport");
-// Requiring handlebars
-var exphbs = require("express-handlebars");
-handlebars = require('handlebars');
-var express = require("express");
-var app = express();
-app.engine('.hbs', exphbs({ extname: '.hbs' }));
-app.set('view engine', '.hbs');
+var LocalStrategy = require("passport-local").Strategy;
+
+
 module.exports = function (app) {
     // Adding new user to the database.
     //   app.post("/register", function(req, res) {
@@ -63,7 +58,7 @@ module.exports = function (app) {
             req.login(userId, function (error) {
                 if (error) {
                     console.log(`err obj : ${error}`)
-                    throw error
+                    res.send(error)
                 } else {
                     console.log(req.user.id)
                     res.end()
@@ -72,12 +67,51 @@ module.exports = function (app) {
             })
         })
     })
+
+    app.get("/login", function (req, res) {
+        res.render("login")
+    });
+
+    app.post('/login',
+        passport.authenticate('local', { failureRedirect: '/login' }),
+        function (req, res) {
+            console.log('try to redirect')
+            res.redirect('/');
+        });
+
+    app.get('/logout', function (req, res) {
+        req.session.destroy(function (err) {
+            res.redirect('/');
+        });
+
+    });
     //     app.post('/login', 
     //   passport.authenticate('local', { failureRedirect: '/login' }),
     //   function(req, res) {
     //     res.redirect('/');
     //   });
 };
+
+passport.use(
+    new LocalStrategy(function (email, password, done) {
+        console.log("LocalStrategy(function (email, password, done)")
+        console.log(email);
+        console.log(password);
+        // User.findOne({ username: username }, function(err, user) {
+        //   if (err) {
+        //     return done(err);
+        //   }
+        //   if (!user) {
+        //     return done(null, false, { message: "Incorrect username." });
+        //   }
+        //   if (!user.validPassword(password)) {
+        //     return done(null, false, { message: "Incorrect password." });
+        //   }
+        return done(null, "false");
+        // });
+    })
+);
+
 passport.serializeUser(function (userId, done) {
     console.log(`serializeUser`)
     done(null, userId);
@@ -92,15 +126,20 @@ passport.deserializeUser(function (userId, done) {
         done(null, userId);
     });
 });
-function passStrategy(userEmail, unHashPassword) {
+
+
+
+function passStrategy(email, password) {
     passport.use(new LocalStrategy(
-        function (userEmail, unHashPassword, done) {
-            User.findOne({ username: userEmail }, function (err, user) {
-                if (err) { return done(err); }
-                if (!user) { return done(null, false); }
-                if (!user.verifyPassword(unHashPassword)) { return done(null, false); }
-                return done(null, user);
-            });
+        function (email, password, done) {
+            console.log(email);
+            console.log(password);
+            // User.findOne({ username: userEmail }, function (err, user) {
+            //     if (err) { return done(err); }
+            //     if (!user) { return done(null, false); }
+            //     if (!user.verifyPassword(unHashPassword)) { return done(null, false); }
+                return done(null, 'user');
+            // });
         }
     ));
 }
