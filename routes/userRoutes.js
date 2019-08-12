@@ -53,7 +53,8 @@ module.exports = function (app) {
 
     });
     app.post("/loginAfterSignUp", function (req, res) {
-        db.User.findOne({ where: { email: req.body.email } }, { fields: ['id'] }).then(function (dbUserFindOne) {
+        db.User.findOne({ where: { email: req.body.email } }, { fields: ["id"] }).then(function (dbUserFindOne) {
+            console.log(dbUserFindOne)
             var userId = { id: dbUserFindOne.dataValues.id }
             req.login(userId, function (error) {
                 if (error) {
@@ -72,45 +73,46 @@ module.exports = function (app) {
         res.render("login")
     });
 
-    app.post('/login',
-        passport.authenticate('local', { failureRedirect: '/login' }),
-        function (req, res) {
-            console.log('try to redirect')
-            res.redirect('/');
-        });
+    // app.post("/login",
+    //     passport.authenticate("local", { failureRedirect: "/login" }),
+    //     function (req, res) {
+    //         console.log("try to redirect")
+    //         res.redirect("/");
+    //     });
 
-    app.get('/logout', function (req, res) {
+    app.get("/logout", function (req, res) {
+        req.logout();
         req.session.destroy(function (err) {
-            res.redirect('/');
+            res.redirect("/");
         });
 
     });
-    //     app.post('/login', 
-    //   passport.authenticate('local', { failureRedirect: '/login' }),
+    //     app.post("/login", 
+    //   passport.authenticate("local", { failureRedirect: "/login" }),
     //   function(req, res) {
-    //     res.redirect('/');
+    //     res.redirect("/");
     //   });
 };
 
-passport.use(
-    new LocalStrategy(function (email, password, done) {
-        console.log("LocalStrategy(function (email, password, done)")
-        console.log(email);
-        console.log(password);
-        // User.findOne({ username: username }, function(err, user) {
-        //   if (err) {
-        //     return done(err);
-        //   }
-        //   if (!user) {
-        //     return done(null, false, { message: "Incorrect username." });
-        //   }
-        //   if (!user.validPassword(password)) {
-        //     return done(null, false, { message: "Incorrect password." });
-        //   }
-        return done(null, "false");
-        // });
-    })
-);
+// passport.use(
+//     new LocalStrategy(function (email, password, done) {
+//         console.log("LocalStrategy(function (email, password, done)")
+//         console.log(email);
+//         console.log(password);
+//         User.findOne({ username: username }, function(err, user) {
+//           if (err) {
+//             return done(err);
+//           }
+//           if (!user) {
+//             return done(null, false, { message: "Incorrect username." });
+//           }
+//           if (!user.validPassword(password)) {
+//             return done(null, false, { message: "Incorrect password." });
+//           }
+//         return done(null, "false");
+//         });
+//     })
+// );
 
 passport.serializeUser(function (userId, done) {
     console.log(`serializeUser`)
@@ -129,17 +131,17 @@ passport.deserializeUser(function (userId, done) {
 
 
 
-function passStrategy(email, password) {
-    passport.use(new LocalStrategy(
-        function (email, password, done) {
-            console.log(email);
-            console.log(password);
-            // User.findOne({ username: userEmail }, function (err, user) {
-            //     if (err) { return done(err); }
-            //     if (!user) { return done(null, false); }
-            //     if (!user.verifyPassword(unHashPassword)) { return done(null, false); }
-                return done(null, 'user');
-            // });
-        }
-    ));
-}
+// function passStrategy(email, password) {
+//     passport.use(new LocalStrategy(
+//         function (email, password, done) {
+//             console.log(email);
+//             console.log(password);
+//             // User.findOne({ username: userEmail }, function (err, user) {
+//             //     if (err) { return done(err); }
+//             //     if (!user) { return done(null, false); }
+//             //     if (!user.verifyPassword(unHashPassword)) { return done(null, false); }
+//                 return done(null, "user");
+//             // });
+//         }
+//     ));
+// }

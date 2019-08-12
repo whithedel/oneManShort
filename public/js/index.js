@@ -64,7 +64,7 @@ var userReq = {
 var handleFormSignin = function() {
     event.preventDefault();
     var user = {
-        email: $email.val().trim(),
+        username: $email.val().trim(),
         password: $password.val().trim()
     };
 
@@ -183,7 +183,7 @@ $email.change(emailInputChange);
 // Add event listener to the register button.
 $registerBtn.on("click", handleFormRegister);
 // Add event listeners to sinin form
-$signin.on("click", handleFormSignin);
+// $signin.on("click", handleFormSignin);
 // $registerBtn.on("click", renderGameBoard(gameBoard));
 
 
@@ -548,8 +548,9 @@ function selectMoves(moves,gamePiece){
     if (moves.length !== 0 ) {
         console.log(moves);
         if (moves.length === 2){
+            var move0 = moves.toString().replace(",","");
             $(`td`).removeClass("bg-warning")
-            $(`#${moves.toString().replace(",","")}`).addClass("bg-warning")
+            $(`#${move0}`).addClass("bg-warning")
         } else if (moves.length >= 4 ) {
             move1 = [moves[0],moves[1]].toString().replace(",","");
             move2 = [moves[2],moves[3]].toString().replace(",","");
@@ -567,10 +568,26 @@ function selectMoves(moves,gamePiece){
         var newGamePiece = this.window.gameBoard[row][col]
 
         $(`#${move1}`).on(`click`, function (event) {
-            
+            console.log(newGamePiece)
             console.log(`thisobj`)
             console.log(event)
+            console.log(id)
         })
+        $(`#${move2}`).on(`click`, function (event) {
+            console.log(newGamePiece)
+            console.log(`thisobj`)
+            console.log(event)
+            console.log(id)
+        })
+        if(move2 === "undefined" || !move2){
+            $(`#${move0}`).on(`click`, function (event) {
+            console.log(newGamePiece)
+            console.log(`thisobj`)
+            console.log(event)
+            console.log(id)
+        })
+        }
+        
         
     }
 }

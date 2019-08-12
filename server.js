@@ -23,8 +23,8 @@ var options = {
 var sessionStore = new MySQLStore(options);
 // Middleware
 app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
 app.use(express.static("public"));
+app.use(express.json());
 app.use(
   session({
     secret: randomstring.generate(),
@@ -44,27 +44,9 @@ app.engine(
   })
 );
 app.set("view engine", "handlebars");
-passport.use(
-  new LocalStrategy(function(email, password, done) {
-    console.log("LocalStrategy(function (email, password, done)");
-    console.log(email);
-    console.log(password);
-    // User.findOne({ username: username }, function(err, user) {
-    //   if (err) {
-    //     return done(err);
-    //   }
-    //   if (!user) {
-    //     return done(null, false, { message: "Incorrect username." });
-    //   }
-    //   if (!user.validPassword(password)) {
-    //     return done(null, false, { message: "Incorrect password." });
-    //   }
-    return done(null, "false");
-    // });
-  })
-);
 
 // Routes
+require("./routes/loginRoutes")(app);
 require("./routes/userRoutes")(app);
 require("./routes/apiRoutes")(app);
 require("./routes/boardRoutes")(app);
