@@ -9,6 +9,12 @@ var $startGame = $("#startGame");
 var $username = $("#staticUserName");
 var $password = $("#inputPassword1");
 var $passwordMatch = $("#inputPassword2");
+var $gamePieceBlack = $(".Black");
+var gamePieceWhite = $(".White");
+var $signin = $("#signin");
+var $logoutLink = $("#logoutLink");
+var $signinCard = $("#signinCard");
+
 // The API object contains methods for each kind of request we'll make
 var API = {
     saveExample: function (example) {
@@ -42,8 +48,32 @@ var userReq = {
             url: "/register",
             data: user
         })
+    },
+    
+    signin : function (user) {
+        console.log("signin : function (user)")
+        return $.ajax({
+            type: "POST",
+            url: "/login",
+            data: user
+        })
     }
 };
+
+// handleFormSignin is call whenever a user tries to signin
+var handleFormSignin = function() {
+    event.preventDefault();
+    var user = {
+        username: $email.val().trim(),
+        password: $password.val().trim()
+    };
+
+    userReq.signin(user).then(function(data){
+        console.log('userReq.signin(user).then(function(data){')
+        console.log(data)
+    })
+}
+
 // handleFormRegister is call whenever we submit a new user then saves if in the database.
 var handleFormRegister = function () {
     event.preventDefault();
@@ -69,19 +99,21 @@ var handleFormRegister = function () {
                     $(".error").append(htmlText);
                 })
             }
-        } else {
+        } else {            
             $.ajax({
                 url: "/loginAfterSignUp",
                 type: "POST",
                 data: data
             }).then(function (data) {
-
                 window.location.href = "http://localhost:3000/";
+                
             })
         }
     })
 
 }
+
+
 // refreshExamples gets new examples from the db and repopulates the list
 var refreshExamples = function () {
     API.getExamples().then(function (data) {
@@ -150,11 +182,13 @@ $exampleList.on("click", ".delete", handleDeleteBtnClick);
 $email.change(emailInputChange);
 // Add event listener to the register button.
 $registerBtn.on("click", handleFormRegister);
+// Add event listeners to sinin form
+// $signin.on("click", handleFormSignin);
 // $registerBtn.on("click", renderGameBoard(gameBoard));
 
 
 
-// Keenan's code start here ************
+////////////////////////////////////////////////////////////
 
 
 
@@ -214,7 +248,7 @@ var boardPiece = function (color, row, col, hasPiece, user, isKing) {
             // ************************* White Piece Logic **************************
             // if the current piece selected is White
             if (this.color === "White" && this.hasPiece === true) {
-                nextRow = this.row += 1;
+                nextRow = this.row + 1;
                 rightCol = this.col + 1;
                 leftCol = this.col - 1;
                 if (gameBoard[nextRow][rightCol] !== undefined && gameBoard[nextRow][rightCol].hasPiece === false) {
@@ -250,7 +284,7 @@ var boardPiece = function (color, row, col, hasPiece, user, isKing) {
                 // ************************* Black Piece Logic **************************
                 // if the current piece selected is black
             } else if (this.color === "Black" && this.hasPiece === true) {
-                nextRow = this.row -= 1;
+                nextRow = this.row - 1;
                 rightCol = this.col + 1;
                 leftCol = this.col - 1;
 
@@ -422,7 +456,7 @@ function renderGameBoard(gameBoard) {
 
         }
 
-        // $("tbody").append(row)
+           $("tbody").append(row)
 
     }
 
@@ -463,9 +497,10 @@ var handleStartGame = function () {
 
             }
 
-             $("tbody").append(row)
+              $("tbody").append(row)
 
         }
+        
 
         // for (var i = 0; i < data.length; i++) {
        
@@ -494,14 +529,81 @@ $(document).on("click", ".tile", (event) => {
     console.log(row, col);
     console.log(this.window.gameBoard[row][col]);
     var gamePiece = this.window.gameBoard[row][col];
-
-
-
     var moves = gamePiece.possibleMoves();
-    console.log(moves)
-
+    selectMoves(moves,gamePiece)
+    // console.log(moves)
+    
 })
 
 // $(document).ready(renderGameBoard(gameBoard));
 $startGame.on("click", handleStartGame);
-renderGameBoard(gameBoard);
+//renderGameBoard(gameBoard);
+
+
+//
+function selectMoves(moves,gamePiece){
+    var move1
+    var move2
+    var hasBeenClick = false;
+    if (moves.length !== 0 ) {
+        console.log(moves);
+        if (moves.length === 2){
+            var move0 = moves.toString().replace(",","");
+            $(`td`).removeClass("bg-warning")
+            $(`#${move0}`).addClass("bg-warning")
+        } else if (moves.length >= 4 ) {
+            move1 = [moves[0],moves[1]].toString().replace(",","");
+            move2 = [moves[2],moves[3]].toString().replace(",","");
+
+            $(`td`).removeClass("bg-warning")
+            $(`td`).removeClass("bg-warning")
+            $(`#${move1}`).addClass("bg-warning")
+            $(`#${move2}`).addClass("bg-warning")
+        }
+
+        ///setting up variable 
+        var id = event.target.id;
+        var row = $(`#${id}`).attr(`data-row`)
+        var col = $(`#${id}`).attr(`data-col`)
+        var newGamePiece = this.window.gameBoard[row][col]
+
+        $(`#${move1}`).on(`click`, function (event) {
+            console.log(newGamePiece)
+            console.log(`thisobj`)
+            console.log(event)
+            console.log(id)
+        })
+        $(`#${move2}`).on(`click`, function (event) {
+            console.log(newGamePiece)
+            console.log(`thisobj`)
+            console.log(event)
+            console.log(id)
+        })
+        if(move2 === "undefined" || !move2){
+            $(`#${move0}`).on(`click`, function (event) {
+            console.log(newGamePiece)
+            console.log(`thisobj`)
+            console.log(event)
+            console.log(id)
+        })
+        }
+        
+        
+    }
+}
+
+function movePiece(move1, move2){
+    var $move1 = $(`#${move1}`)
+    var $move2 = $(`#${move2}`)
+
+    $move1.on(`click`, function (event) {
+        ///setting up variable 
+        
+        var id = event.target.id;
+        var row = $(`#${id}`).attr(`data-row`)
+        var col = $(`#${id}`).attr(`data-col`)
+        var newGamePiece = this.window.gameBoard[row][col]
+        console.log(`thisobj`)
+        console.log(id)
+    })
+}
