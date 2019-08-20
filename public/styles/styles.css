@@ -3,13 +3,13 @@
 }
 
 .tile {
-    height: 100px;
-    width: 100px;
+    height: 65px;
+    width: 65px;
     background: black;
     border: 2px solid black;    
 }
 
-.jumbotron {
+.jumbotronCss {
     height: 50px;
 }
 
@@ -19,13 +19,13 @@ tbody {
 
 .White {
     background-color: blue;
-    border-radius: 50%;
+    /* border-radius: 50%; */
     color: white;
     
 }
 
 .Black {
-    border-radius: 50%;
+    /* border-radius: 50%; */
     color: white;
 }
 
@@ -35,7 +35,7 @@ tbody {
 
 .Square {
     color: white;
-    background-color: white;
+    background-color: transparent;
 }
 
 /* Dragula */
@@ -62,3 +62,8 @@ tbody {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
   filter: alpha(opacity=20);
 }
+
+body {
+  background-image: url("https://images.pexels.com/photos/353644/pexels-photo-353644.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
+ }
+

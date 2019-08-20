@@ -1,10 +1,10 @@
-// Authentication package
 var db = require("../models");
 module.exports = function(app) {
   // Load index page
   app.get("/examples", function(req, res) {
     console.log("i got called all");
     db.Example.findAll({}).then(function(dbExamples) {
+      console.log(dbExamples);
       res.render("index", {
         msg: "Welcome!",
         examples: dbExamples

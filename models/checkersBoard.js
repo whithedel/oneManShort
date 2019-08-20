@@ -7,6 +7,14 @@ module.exports = function(sequelize, DataTypes) {
     isKing: DataTypes.BOOLEAN,
     hasPiece: DataTypes.BOOLEAN
   });
+
+  Board.associate = function(models) {
+    Board.belongsTo(models.Namepair, {
+      foreignKey: {
+        allowNull: false
+      }
+    });
+  };
+
   return Board;
 };
-
