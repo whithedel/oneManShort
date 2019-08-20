@@ -6,16 +6,11 @@ var saltRounds = 10;
 // Authentication package
 var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
+var moment = require('moment');
 
 
 module.exports = function (app) {
     // Adding new user to the database.
-    //   app.post("/register", function(req, res) {
-    //     console.log(req.body);
-    //     db.User.create(req.body).then(function(dbUser) {
-    //       res.json(dbUser);
-    //     });
-    //   });
     app.post("/register", [
         // email must be an email
         check("email", "Email field cannot be empty").not().isEmpty(),
@@ -46,6 +41,11 @@ module.exports = function (app) {
                 // Store hash in your password DB.
                 db.User.create({ email: req.body.email, password: hash }).then(function (dbUser) {
                     res.json(dbUser);
+                }).catch(function (err) {
+                    if (err) {
+                        err = { errors: [{ msg: 'You currently have an account with us already please use that account to sign in thank you.' }] }
+                        return res.json(err)
+                    }
                 });
             });
 
@@ -54,7 +54,6 @@ module.exports = function (app) {
     });
     app.post("/loginAfterSignUp", function (req, res) {
         db.User.findOne({ where: { email: req.body.email } }, { fields: ["id"] }).then(function (dbUserFindOne) {
-            console.log(dbUserFindOne)
             var userId = { id: dbUserFindOne.dataValues.id }
             req.login(userId, function (error) {
                 if (error) {
@@ -73,75 +72,30 @@ module.exports = function (app) {
         res.render("login")
     });
 
-    // app.post("/login",
-    //     passport.authenticate("local", { failureRedirect: "/login" }),
-    //     function (req, res) {
-    //         console.log("try to redirect")
-    //         res.redirect("/");
-    //     });
 
     app.get("/logout", function (req, res) {
+        var dateTime = moment().format();
+        db.User.update({
+             status: "inactive",
+             lastLogin: dateTime
+            }, { 
+                where: req.user 
+            })
         req.logout();
         req.session.destroy(function (err) {
             res.redirect("/");
         });
 
     });
-    //     app.post("/login", 
-    //   passport.authenticate("local", { failureRedirect: "/login" }),
-    //   function(req, res) {
-    //     res.redirect("/");
-    //   });
 };
 
-// passport.use(
-//     new LocalStrategy(function (email, password, done) {
-//         console.log("LocalStrategy(function (email, password, done)")
-//         console.log(email);
-//         console.log(password);
-//         User.findOne({ username: username }, function(err, user) {
-//           if (err) {
-//             return done(err);
-//           }
-//           if (!user) {
-//             return done(null, false, { message: "Incorrect username." });
-//           }
-//           if (!user.validPassword(password)) {
-//             return done(null, false, { message: "Incorrect password." });
-//           }
-//         return done(null, "false");
-//         });
-//     })
-// );
-
 passport.serializeUser(function (userId, done) {
-    console.log(`serializeUser`)
     done(null, userId);
 });
 
 passport.deserializeUser(function (userId, done) {
-    console.log("passport deserializeuser")
     db.User.findOne({ where: userId }).then(function (user) {
         var userId = { id: user.get().id }
-        console.log(userId)
-        console.log("passport.deserializeUser")
         done(null, userId);
     });
 });
-
-
-
-// function passStrategy(email, password) {
-//     passport.use(new LocalStrategy(
-//         function (email, password, done) {
-//             console.log(email);
-//             console.log(password);
-//             // User.findOne({ username: userEmail }, function (err, user) {
-//             //     if (err) { return done(err); }
-//             //     if (!user) { return done(null, false); }
-//             //     if (!user.verifyPassword(unHashPassword)) { return done(null, false); }
-//                 return done(null, "user");
-//             // });
-//         }
-//     ));
-// }

@@ -48,6 +48,7 @@ app.set("view engine", "handlebars");
 // Routes
 require("./routes/loginRoutes")(app);
 require("./routes/userRoutes")(app);
+require("./routes/namepairRoutes")(app);
 require("./routes/apiRoutes")(app);
 require("./routes/boardRoutes")(app);
 require("./routes/htmlRoutes")(app);

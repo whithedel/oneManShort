@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html>
-​
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
@@ -8,70 +7,19 @@
   <meta name="description" content="">
   <meta name="author" content="Whithedel Carre, Keenan Mapp, Andy ?">
   <meta name="generator" content="Jekyll v3.8.5">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css">
   <link rel="stylesheet" href="/styles/styles.css" media="screen" title="no title" charset="utf-8">
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
-    </script>
   <title>Checkers oneManShort</title>
-  <style>
-    .bd-placeholder-img {
-      font-size: 1.125rem;
-      text-anchor: middle;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
-
-    ​ @media (min-width: 768px) {
-      .bd-placeholder-img-lg {
-        font-size: 3.5rem;
-      }
-    }
-  </style>
-  <link href="signin.css" rel="stylesheet">
+  <link href="/public/styles/signin.css" rel="stylesheet">
+  <link href="/public/styles/style.scss" rel="stylesheet">
 </head>
 ​
 
 <body>
-  <div class="row m-auto">
-    <div class="col-12 m-auto">
-
-      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-    <a class="navbar-brand" href="/">oneManShort Checkers</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
-      aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    ​
-    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/profile">Profile</a>
-        </li>
-        {{#if user}}
-        <li class="nav-item">
-          <a class="nav-link" id="logoutLink" href="/logout">Logout</a>
-        </li> 
-        <li class="nav-item">
-          <a class="nav-link" id="checkersLink" href="/checkers">Checkers</a>
-        </li> 
-        {{/if}}
-      </ul>
-    </div>
-  </nav>
-
-    </div>
-    
-  </div>
-  <div class="container-fluid">
-    {{{body}}}
-  </div>
-  
+  {{>header/header}}
+  {{{body}}}
+  {{>footer/footer}}
 </body>
-​
+
 </html>

@@ -1,0 +1,38 @@
+<div class="row mt-5 availableUser">
+    <div class="col-8 mx-auto">
+        <ul class="list-group">
+            {{#each thePayLoad}}
+                    <button type="button" data-namepair="{{namePair}}" class="btn btn-lg btn-success my-1 namepair" id="activeUser">
+                        {{otherUser}}
+                    </button>
+            {{/each}}
+        </ul>
+    </div>
+</div>
+
+<div class="row gameIn" style="display: none">
+    <div class="col-12 text-center">
+        <div id='activePlayer' class="btn btn-lg  mx-auto text-center text-white bg-primary my-5">
+            Active Players
+        </div>
+    </div>
+</div>
+<div class="row mx-auto gameIn" style="display: none">
+    <div class="col-2 jumbotron jumbotronCss bg-dark text-white mx-auto">
+        <div id='user1' class="h3 mx-auto">Jack</div>
+    </div>
+    <div class="col-8 text-center mx-auto">
+        <table class="mx-auto text-center rounded " id="game-board">
+            <tbody>
+                <!-- append gameboard -->
+
+
+            </tbody>
+        </table>
+    </div>
+    <div class="col-2 jumbotron jumbotronCss bg-dark text-white mx-auto">
+        <div id='user2' class="h3 mx-auto float-right">Jill </div>
+    </div>
+</div>
+
+

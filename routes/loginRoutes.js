@@ -3,7 +3,6 @@ var db = require("../models");
 var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
 var bcrypt = require("bcrypt");
-var LocalStrategy = require("passport-local").Strategy;
 
 module.exports = function(app) {
   passport.use(
@@ -21,22 +20,22 @@ module.exports = function(app) {
         bcrypt.compare(password, hash, function(err, res) {
           if (res === true) {
             return done(null, userId);
-          } else {
-            return done(null, false);
+          }
+          if (err || !user) {
+            var error = new Error("Wrong email or password.");
+            error.status = 401;
+            return done(err);
           }
         });
-        // if (!user.validPassword(password)) {
-        //   return done(null, false, { message: "Incorrect password." });
-        // }
-        // return done(null, "false");
       });
     })
   );
 
   app.post(
     "/login",
-    passport.authenticate("local", { failureRedirect: "/login" }),
+    passport.authenticate("local", { failureRedirect: "/" }),
     function(req, res) {
+      db.User.update({ status: "active" }, { where: req.user });
       console.log("try to redirect");
       res.redirect("/");
     }

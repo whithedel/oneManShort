@@ -14,7 +14,10 @@ var gamePieceWhite = $(".White");
 var $signin = $("#signin");
 var $logoutLink = $("#logoutLink");
 var $signinCard = $("#signinCard");
-
+var $namepair = $(".namepair");
+var $activePlayer = $("#activePlayer");
+var $user1 = $("#user1");
+var $user2 = $("#user2");
 // The API object contains methods for each kind of request we'll make
 var API = {
     saveExample: function (example) {
@@ -49,26 +52,80 @@ var userReq = {
             data: user
         })
     },
-    
-    signin : function (user) {
-        console.log("signin : function (user)")
+
+    signin: function (user) {
         return $.ajax({
             type: "POST",
             url: "/login",
             data: user
         })
+    },
+
+    createNamepair: function (namepair) {
+        return $.ajax({
+            type: "GET",
+            url: "/namepair",
+            data: namepair
+        })
     }
 };
 
+var handleNamepairBtn = function (event) {
+    event.preventDefault();
+    var namepair = {
+        namepair: $(this).attr("data-namepair")
+    }
+    userReq.createNamepair(namepair).then(function (data) {
+        console.log(data[0].id)
+        console.log(data[0].namepair.split("+")[0])
+        console.log(data[0].namepair.split("+")[1])
+
+        var namepairId = data[0].id;
+        var user1 = data[0].namepair.split("+")[0];
+        var user2 = data[0].namepair.split("+")[1];
+        var gameBoard = fill(Board(8), user1, user2);
+        
+        // window.location.href = "http://localhost:3000/renderGameBoard";
+        // whitesCounter(gameBoard);
+        // blacksCounter(gameBoard);
+        // squaresCounter(gameBoard);
+        // renderGameBoard(gameBoard);
+        console.log(JSON.stringify(gameBoard,0,2))
+        var data = {
+            gameBoard: gameBoard,
+            namepairId: namepairId
+        }
+        boardReq.saveBoard(data).then(function (data) {
+                console.log(data);
+                boardReq.currentBoard({NamepairId:namepairId}).then(function ( data){
+                    console.log(data)
+                    $(".availableUser").hide();
+                    $(".gameIn").show();
+                    $user1.html(user1);
+                    $user2.html(user2);
+                    handleStartGame(data);
+                })
+                // window.location.href = "http://localhost:3000/renderGameBoard";
+            })
+    })
+}
+
+var handleActivePlayerBtn = function(){
+    event.preventDefault()
+    $(".availableUser").show();
+    $(".gameIn").hide();
+    $("tbody").empty()
+}
+
 // handleFormSignin is call whenever a user tries to signin
-var handleFormSignin = function() {
+var handleFormSignin = function () {
     event.preventDefault();
     var user = {
         username: $email.val().trim(),
         password: $password.val().trim()
     };
 
-    userReq.signin(user).then(function(data){
+    userReq.signin(user).then(function (data) {
         console.log('userReq.signin(user).then(function(data){')
         console.log(data)
     })
@@ -87,6 +144,7 @@ var handleFormRegister = function () {
     //   return;
     // };
     userReq.saveUser(user).then(function (data) {
+        console.log(data)
         if (data !== "undefined" && "errors" in data) {
             obj = data;
             $(".error").empty()
@@ -99,14 +157,14 @@ var handleFormRegister = function () {
                     $(".error").append(htmlText);
                 })
             }
-        } else {            
+        } else {
             $.ajax({
                 url: "/loginAfterSignUp",
                 type: "POST",
                 data: data
             }).then(function (data) {
                 window.location.href = "http://localhost:3000/";
-                
+
             })
         }
     })
@@ -162,9 +220,7 @@ var handleFormSubmit = function (event) {
 // handleDeleteBtnClick is called when an example's delete button is clicked
 // Remove the example from the db and refresh the list
 var handleDeleteBtnClick = function () {
-    var idToDelete = $(this)
-        .parent()
-        .attr("data-id");
+    var idToDelete = $(this).parent().attr("data-id");
     API.deleteExample(idToDelete).then(function () {
         refreshExamples();
     });
@@ -185,30 +241,30 @@ $registerBtn.on("click", handleFormRegister);
 // Add event listeners to sinin form
 // $signin.on("click", handleFormSignin);
 // $registerBtn.on("click", renderGameBoard(gameBoard));
-
-
-
+$namepair.on("click", handleNamepairBtn)
+// Add event listener to the activePlayer button
+$activePlayer.on("click", handleActivePlayerBtn)
 ////////////////////////////////////////////////////////////
 
 
 
 
 var boardReq = {
-    saveBoard: function (gameBoard) {
+    saveBoard: function (data) {
         return $.ajax({
             headers: {
                 "Content-Type": "application/json"
             },
             type: "POST",
             url: "boardstatus",
-            data: JSON.stringify(gameBoard)
+            data: JSON.stringify(data)
         })
     },
-    currentBoard: function () {
+    currentBoard: function (data) {
         return $.ajax({
             type: "GET",
             url: "displayBoard",
-
+            data: data
         })
     }
 }
@@ -226,8 +282,8 @@ const Board = function (rows) {
     return array;
 }
 
-var user1 = "Jack";
-var user2 = "Jill";
+// var user1 = "Jack";
+// var user2 = "Jill";
 
 var x = `X`
 // Creating an object with every board piece
@@ -331,7 +387,7 @@ var boardPiece = function (color, row, col, hasPiece, user, isKing) {
 
 
 // Code to make checker like pattern with X' and O's
-function fill(array) {
+function fill(array, user1, user2) {
     for (var i = 0; i < array.length; i++) {
         var row = array[i];
         if (i % 2 === 0) {
@@ -352,10 +408,10 @@ function fill(array) {
 
     }
     // Callback function
-    return gamePieceSetup(array)
+    return gamePieceSetup(array, user1, user2)
 }
 // Code to loop thru the game board and add the 24 pieces. 12 White 12 Black.
-function gamePieceSetup(array) {
+function gamePieceSetup(array, user1, user2) {
     for (var i = 0; i < array.length; i++) {
         var row = array[i];
         if (i < 3) {
@@ -382,7 +438,7 @@ function gamePieceSetup(array) {
 
     return array
 }
-var gameBoard = fill(Board(8));
+
 
 var whites = 0;
 var blacks = 0;
@@ -390,7 +446,7 @@ var squares = 0;
 
 
 // Count how mant white pieces on the board
-let whitesCounter = function () {
+let whitesCounter = function (gameBoard) {
 
     for (var i = 0; i < gameBoard.length; i++) {
 
@@ -402,10 +458,10 @@ let whitesCounter = function () {
         }
     }
     return whites;
-}();
+};
 
 // Count how many black pieces on the board
-let blacksCounter = function () {
+let blacksCounter = function (gameBoard) {
 
     for (var i = 0; i < gameBoard.length; i++) {
 
@@ -417,9 +473,9 @@ let blacksCounter = function () {
         }
     }
     return blacks;
-}();
+};
 
-let squaresCounter = function () {
+let squaresCounter = function (gameBoard) {
     for (var i = 0; i < gameBoard.length; i++) {
 
         for (var j = 0; j < gameBoard.length; j++) {
@@ -430,7 +486,7 @@ let squaresCounter = function () {
         }
     }
     return squares;
-}();
+};
 
 function renderGameBoard(gameBoard) {
     for (var i = 0; i < gameBoard.length; i++) {
@@ -456,30 +512,48 @@ function renderGameBoard(gameBoard) {
 
         }
 
-           $("tbody").append(row)
+        $("tbody").append(row)
 
     }
 
-}
+};
 
-var handleStartGame = function () {
-    event.preventDefault();
-    boardReq.currentBoard().then(function (data) {
+function removeNullFromGameboard(user) {
+    if (user === null) {
+        return ""
+    } else {
+        return user
+    }
+};
+function returnProperClass(user) {
+    if (user === null) {
+        return ""
+    } else {
+        return "rounded-circle"
+    }
+};
+
+var handleStartGame = function (data) {
+    // event.preventDefault();
+    // window.location.href = "http://localhost:3000/renderGameBoard";
+    // boardReq.currentBoard().then(function (data) {
         console.log(data)
         // console.log(data[0].id)
         // console.log(typeof data)
-       
-            var board = []
-            for (var i = 0; i < 64; i += 8) {
-                board.push(data.slice(i, i + 8))
-            }
-            console.log(board)
+        var count = 0
+        var board = []
+        for (var i = 0; i < 64; i += 8) {
+            board.push(data.slice(i, i + 8))
+        }
+        console.log(board)
         for (var i = 0; i < board.length; i++) {
             var row = $("<tr>");
+             
 
             for (var j = 0; j < board.length; j++) {
-
-                $(row).append(`<td id='${i}${j}' class='tile ${board[i][j].color} text-center mx-3'data-row='${i}' data-col='${j}'>${board[i][j].user}</td>`);
+                var color = board[i][j].color;
+                var user = board[i][j].user;
+                $(row).append(`<td id='${i}${j}' class='${returnProperClass(user)} tile ${color} text-center animated jackInTheBox mx-3'data-row='${i}' data-col='${j}'>${removeNullFromGameboard(user)}</td>`);
                 // Ajax here
                 var boardDB = {
                     color: board[i][j].color,
@@ -489,37 +563,13 @@ var handleStartGame = function () {
                     isKing: board[i][j].isKing,
                     hasPiece: board[i][j].hasPiece
                 }
-
-                // boardReq.saveBoard(gameBoardDB).then(function (data) {
-                //     console.log(data);
-                // })
-
-
             }
-
-              $("tbody").append(row)
-
+            $("tbody").append(row)
+            count ++
         }
-        
+        console.log(count)
 
-        // for (var i = 0; i < data.length; i++) {
-       
-        //     console.log(data[i].id)
-            
-
-        //     if ((data[i].id % 8 === 0 || data[i].id === 1) && (data.id !== 64)) {
-        //         var row = $("<tr>");
-                
-                    
-                
-        //         $("tbody").append(row);
-        //     } else if (data[i].id < 65) {
-        //         $(row).append(`<td id='${positionY}${positionX}' class='tile ${color} text-center mx-3'data-row='${positionY}' data-col='${positionX}'>${user}</td>`);
-        //     }
-            
-            
-        // }
-    })
+    // })
 };
 
 $(document).on("click", ".tile", (event) => {
@@ -527,33 +577,33 @@ $(document).on("click", ".tile", (event) => {
     var row = $(`#${id}`).attr(`data-row`)
     var col = $(`#${id}`).attr(`data-col`)
     console.log(row, col);
-    console.log(this.window.gameBoard[row][col]);
+    console.log(this.window);
     var gamePiece = this.window.gameBoard[row][col];
     var moves = gamePiece.possibleMoves();
-    selectMoves(moves,gamePiece)
+    selectMoves(moves, gamePiece)
     // console.log(moves)
-    
+
 })
 
 // $(document).ready(renderGameBoard(gameBoard));
-$startGame.on("click", handleStartGame);
-//renderGameBoard(gameBoard);
+// $startGame.on("click", handleStartGame);
+
 
 
 //
-function selectMoves(moves,gamePiece){
+function selectMoves(moves, gamePiece) {
     var move1
     var move2
     var hasBeenClick = false;
-    if (moves.length !== 0 ) {
+    if (moves.length !== 0) {
         console.log(moves);
-        if (moves.length === 2){
-            var move0 = moves.toString().replace(",","");
+        if (moves.length === 2) {
+            var move0 = moves.toString().replace(",", "");
             $(`td`).removeClass("bg-warning")
             $(`#${move0}`).addClass("bg-warning")
-        } else if (moves.length >= 4 ) {
-            move1 = [moves[0],moves[1]].toString().replace(",","");
-            move2 = [moves[2],moves[3]].toString().replace(",","");
+        } else if (moves.length >= 4) {
+            move1 = [moves[0], moves[1]].toString().replace(",", "");
+            move2 = [moves[2], moves[3]].toString().replace(",", "");
 
             $(`td`).removeClass("bg-warning")
             $(`td`).removeClass("bg-warning")
@@ -579,26 +629,26 @@ function selectMoves(moves,gamePiece){
             console.log(event)
             console.log(id)
         })
-        if(move2 === "undefined" || !move2){
+        if (move2 === "undefined" || !move2) {
             $(`#${move0}`).on(`click`, function (event) {
-            console.log(newGamePiece)
-            console.log(`thisobj`)
-            console.log(event)
-            console.log(id)
-        })
+                console.log(newGamePiece)
+                console.log(`thisobj`)
+                console.log(event)
+                console.log(id)
+            })
         }
-        
-        
+
+
     }
 }
 
-function movePiece(move1, move2){
+function movePiece(move1, move2) {
     var $move1 = $(`#${move1}`)
     var $move2 = $(`#${move2}`)
 
     $move1.on(`click`, function (event) {
         ///setting up variable 
-        
+
         var id = event.target.id;
         var row = $(`#${id}`).attr(`data-row`)
         var col = $(`#${id}`).attr(`data-col`)
