@@ -163,7 +163,7 @@ var handleFormRegister = function () {
                 type: "POST",
                 data: data
             }).then(function (data) {
-                window.location.href = "http://localhost:3000/";
+                window.location.href = "/";
 
             })
         }
