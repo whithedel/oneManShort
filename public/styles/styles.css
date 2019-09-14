@@ -67,3 +67,12 @@ body {
   background-image: url("https://images.pexels.com/photos/353644/pexels-photo-353644.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
  }
 
+ .display-3 {
+   color: white;
+ }
+ .mt-4 p {
+   color: rgb(46, 169, 250);
+   text-shadow: .1rem .1rem .8rem black;
+ }
+ 
+
