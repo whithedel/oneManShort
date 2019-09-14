@@ -14,14 +14,20 @@ var PORT = process.env.PORT || 3000;
 var Sequelize = require("sequelize");
 
 var options = process.env.JAWSDB_URL
-  ? new Sequelize(process.env.JAWSDB_URL)
-  : {
-      host: process.env.DB_HOST,
+  ? {
+      host: process.env.JAWSDB_HOST,
       port: 3306,
-      user: process.env.DB_USER,
-      password: process.env.MYSQL_PASSWORD,
-      database: process.env.DB_DATABASE
-    };
+      user: process.env.JAWSDB_USER,
+      password: process.env.JAWSDB_PASSWORD,
+      database: process.env.JAWSDB_DATABASE
+    }
+  : {
+    host: process.env.DB_HOST,
+    port: 3306,
+    user: process.env.DB_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.DB_DATABASE
+  };
 
 var sessionStore = new MySQLStore(options);
 // Middleware
