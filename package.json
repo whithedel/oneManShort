@@ -1,39 +1,208 @@
 {
-  "name": "node-handlebars-boilerplate",
+  "name": "checkers",
   "version": "1.0.0",
-  "description": "Project 2 Starter",
+  "description": "",
   "main": "server.js",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "lint": "eslint --quiet .",
-    "fix": "eslint --fix .",
-    "test": "npm run lint && cross-env NODE_ENV=test mocha -u tdd --reporter spec --exit"
+    "watch": "nodemon.js"
+    
   },
+  "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^3.0.6",
-    "dotenv": "^8.0.0",
-    "express": "^4.17.0",
-    "express-handlebars": "^3.1.0",
-    "express-mysql-session": "^2.1.0",
-    "express-session": "^1.16.2",
-    "express-validator": "^6.1.1",
-    "handlebars": "^4.1.2",
-    "moment": "^2.24.0",
-    "mysql2": "^1.6.5",
-    "passport": "^0.4.0",
-    "passport-local": "^1.0.0",
-    "randomstring": "^1.1.5",
-    "sequelize": "^5.8.6"
-  },
-  "devDependencies": {
-    "chai": "^4.2.0",
-    "chai-http": "^4.3.0",
-    "cross-env": "^5.2.0",
-    "eslint": "^5.16.0",
-    "eslint-config-prettier": "^4.3.0",
-    "eslint-plugin-prettier": "^3.1.0",
-    "mocha": "^6.1.4",
-    "prettier": "^1.17.1"
+    "express": "^4.17.1",
+    "nodemon": "^1.19.1"
   }
 }
+
+
+
+
+
+
+
+
+
+
+{
+    Name: "Thomas", 
+    os: "Windows", 
+    hobbies: [
+    "Weightlifting",
+    "Chess"
+  ]
+}
+   
+ {
+    name: "Giselle",
+   os: "Mojave",
+   hobbies : [
+    "Cycling",
+    "Reading",
+    "Gaming"
+  ]
+}
+
+{
+ 
+   name : "anahis barrie",
+   os : "MAC",
+   hobby : "sleep",
+   info : "none"
+}
+
+
+
+{
+
+   name : "Esther",
+   os : "Mac",
+   hobbies : [
+    "Traveling",
+    "Eating",
+    "Hiking"
+  ]
+    
+{
+    {  
+    name : "Mat",
+   os : "Windows",
+   hobbies : [
+        "Napping",
+        "Blinking",
+        "Tasting"
+      ]
+    }
+
+{
+    name: "Elyza",
+    os: "Mac",
+    hobbies: [
+        "Yoga",
+        "Photography",
+        "Sketching and Painting"
+      ]
+    }
+
+{
+  name: "Rafaella",
+   os: "MAC",
+   hobbies: [
+        "reading",
+        "photography",
+        "design"
+      ]
+    }
+
+
+{
+    name : "Emily",
+    os : "Windows 10",
+    row : "2",
+    hobbies : [
+        "DIY projects",
+        "Makeing lamps out of liquor bottles",
+        "Laughing"
+      ]
+    }
+
+
+{
+  
+   Name : "Austin",
+   os : "Mac",
+   hobbies : [
+        "movies",
+        "whiskey",
+        "dimsum"
+      ]
+    }
+
+
+{
+
+   Name : "Abby",
+   os : "Mac",
+   Hobbies : [
+        "Running",
+        "Eating",
+        "Painting"
+      ]
+    }
+
+{
+   name: "Megan Gilpin",
+   row: "2",
+   os: "Mac",
+   hobbies: [
+        "Hiking",
+        "Improv",
+        "Baking"
+      ]
+    }
+
+
+{
+   
+    Name : "Daniel",
+    OS : "Windows",
+    Hobbies : "Showing up late to family events"
+    }
+
+
+{
+    Name : "Whithedel Carre",
+    Os: "Mac",
+    Hobby : [
+        "Coding",
+        "Play Station",
+        "Reading",
+        "Guitar",
+        "Going to the Beach",
+        "Random Research"
+      ]
+    }
+
+
+{
+
+   name : "Gabi",
+   os : "Mac",
+   hobbies : [
+        "rockclimb",
+        "drink",
+        "Revel"
+      ]
+    }
+
+
+{
+
+   name : "Allen",
+   os : "Windows 10",
+   hobbies : [
+        "guitar",
+        "books"
+      ]
+    }
+
+
+{
+   name : "Kayleigh Starr",
+   os : "Windows",
+   hobbies : [
+        "coding",
+        "drawing/painting",
+        "gaming",
+        "reading"
+      ]
+    }
+
+{Name: "Austin" os: "Mac" hobbies : [
+        "movies",
+        "whiskey",
+        "dimsum"
+      ]
+    }

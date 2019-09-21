@@ -1,0 +1,50 @@
+.tile {
+    height: 100px;
+    width: 100px;
+    background: grey;
+    /* font-display: hidden; */
+    border: 2px solid black;    
+}
+
+.jumbotron {
+    height: 50px;
+}
+
+tbody {
+    border: solid 3px black;
+}
+
+.White {
+    background-color: blue;
+    border-radius: 50%;
+    color: white;
+    font-size: 0%;
+    
+}
+
+.Black {
+    border-radius: 50%;
+    color: white;
+    background-color: black;
+    font-size: 0%;
+
+}
+
+.undefined {
+    font-size: 0%;
+
+}
+
+.Square {
+    color: white;
+    background-color: white;
+    font-size: 0%;
+
+}
+
+.highlight {
+  border: solid 5px slategray !important;
+  background-color: gold;
+  /* border-radius: 50%; */
+}
+
