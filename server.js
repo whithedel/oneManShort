@@ -16,7 +16,7 @@ var options = {
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "maillot9Bootcamp",
+  password: "1Barbuda",
   database: "oneManShortDB"
 };
 
